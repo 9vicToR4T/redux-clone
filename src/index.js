@@ -1,32 +1,23 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { createStore } from "./store/createStore";
-import { taskReducer } from "./store/taskReducer";
-import * as actions from './store/actionTypes';
+import configureStore from "./store/store";
+import { completedTask, titleChanged, taskDelete } from "./store/task";
 
-const initialStore =  [
-  { id: 1, title: "Task 1", completed: false },
-  { id: 2, title: "Task 2", completed: false },
-  { id: 3, title: "Task 3", completed: false },
-]
-
-const store = createStore(taskReducer, initialStore);
+const store = configureStore();
 
 const App = () => {
   const [state, setState] = useState(store.getState());
 
-  const handleComplete = (id) => {
-    store.dispatch({
-      type: actions.taskUpdated,
-      payload: { id: id, completed: true},
-    });
+  const taskComplete = (id) => {
+    store.dispatch(completedTask(id));
   };
 
-  const changeTitle = (taskId) => {
-    store.dispatch({
-      type: actions.taskUpdated,
-      payload: { id: taskId, title: `New title ${taskId}` },
-    });
+  const changeTitle = (id) => {
+    store.dispatch(titleChanged(id));
+  };
+
+  const deleteTask = (id) => {
+    store.dispatch(taskDelete(id));
   };
 
   useEffect(() => {
@@ -43,8 +34,9 @@ const App = () => {
           <li key={el.id}>
             <p> {el.title} </p>
             <p>{`Completed: ${el.completed}`}</p>
-            <button onClick={() => handleComplete(el.id)}>Complete</button>
+            <button onClick={() => taskComplete(el.id)}>Complete</button>
             <button onClick={() => changeTitle(el.id)}>Change title</button>
+            <button onClick={() => deleteTask(el.id)}>Delet task</button>
             <hr />
           </li>
         ))}

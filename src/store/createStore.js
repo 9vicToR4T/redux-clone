@@ -1,3 +1,5 @@
+// asta e exemplul a cum ar fi createStore in js, care lucreaza asemanator cu cel din redux
+
 export function createStore(reducer, initialState) {
   let state = initialState;
   let listeners = [];
